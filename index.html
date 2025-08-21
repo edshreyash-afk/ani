@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Nush & Shrey – Our Year 🌻</title>
+  <meta name="description" content="A private anniversary experience for Nush & Shrey" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Great+Vibes&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --sunflower: #F2C84B; /* warm sunflower yellow */
+      --maroon: #6B1D1D;
+      --deep-red: #A52424;
+      --soft-cream: #FFF7EA;
+      --paper: #FAF3E7;
+      --ink: #3B3B3B;
+      --lime-yellow: #E9FF70; /* for the beaming button */
+      --accent: #ffcf66; /* glow accent */
+    }
+    *{box-sizing:border-box}
+    html,body{height:100%;margin:0}
+    body{
+      font-family: 'Playfair Display', serif;
+      color: var(--ink);
+      background: var(--soft-cream);
+      overflow:hidden; /* sections are full screen */
+    }
+    .screen{position:relative; height:100dvh; width:100%; display:none;}
+    .screen.active{display:block;}
+
+    /* ---------- Shared UI ---------- */
+    .centered{
+      position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; gap:1.25rem; padding:1.5rem; text-align:center;
+    }
+    h1.title{
+      font-family: 'Great Vibes', cursive;
+      font-size: clamp(40px, 8vw, 96px);
+      color: #fff; text-shadow: 0 4px 30px rgba(0,0,0,.35);
+      letter-spacing:.5px; margin:0;
+    }
+    h2.subtitle{ margin:0; font-weight:700; font-size: clamp(18px, 2.5vw, 28px); color: #fff; text-shadow: 0 2px 20px rgba(0,0,0,.35); }
+
+   
+    .btn{
+      --bg: var(--sunflower);
+      --fg: #2b2100;
+      background: var(--bg);
+      color: var(--fg);
+      padding: 0.95rem 1.35rem;
+      border-radius: 999px;
+      border: none;
+      font-weight: 700;
+      font-size: clamp(16px, 2.2vw, 20px);
+      cursor: pointer;
+      box-shadow: 0 8px 20px rgba(0,0,0,.15), inset 0 0 0 2px rgba(255,255,255,.35);
+      transition: transform .2s ease, box-shadow .2s ease, filter .2s ease;
+    }0
+    .btn:hover{ transform: translateY(-2px); box-shadow: 0 14px 26px rgba(0,0,0,.18), 0 0 18px 6px rgba(255, 207, 102, .35); }
+    .btn:active{ transform: translateY(0); filter: brightness(.98); }
+
+    .btn-beam{
+      --bg: var(--lime-yellow);
+      --fg: #2d2d00;
+      position: relative;
+      animation: pulse 1.8s ease-in-out infinite;
+    }
+    @keyframes pulse{
+      0%{ box-shadow: 0 0 0 0 rgba(233,255,112,.55), 0 8px 20px rgba(0,0,0,.18); }
+      70%{ box-shadow: 0 0 0 25px rgba(233,255,112,0), 0 8px 20px rgba(0,0,0,.18); }
+      100%{ box-shadow: 0 0 0 0 rgba(233,255,112,0), 0 8px 20px rgba(0,0,0,.18); }
+    }
+/* new addon to lift button */
+    #toVideoBtn {
+  margin-top: 0.5rem !important; /* Lift the button closer by reducing the margin on top */
+}
+
+    /* ---------- Screen: Gate (Code Login) ---------- */
+#gate {
+  background: none;   /* remove maroon/deep-red gradient */
+  isolation: isolate;
+  position: relative; /* needed for ::before */
+}
+
+#gate::before {
+  content:"";
+  position:absolute;
+  inset:0;
+  background: url("flowers.jpg.jpg") center/cover no-repeat; /* just the image */
+  filter: saturate(1.05) contrast(1.05); /* optional small enhancement */
+  z-index:-1;
+  opacity:1;  /* full strength image */
+  /* ❌ no mix-blend-mode */
+}
+
+    .gate-card{
+      width:min(560px, 92%);
+      background: rgba(255,255,255,.9);
+      border-radius: 24px;
+      padding: 1.5rem;
+      box-shadow: 0 20px 60px rgba(0,0,0,.35);
+      backdrop-filter: blur(8px);
+      border: 1px solid rgba(255,255,255,.6);
+    }
+    .gate-card h3{margin:.25rem 0 1rem 0; color: var(--maroon)}
+    .input-row{display:flex; gap:.75rem}
+    #passcode{flex:1; padding: .9rem 1rem; border-radius: 14px; border: 2px solid #ddd; font-size: 1rem; letter-spacing: .2em; text-align:center}
+    .hint{font-size:.9rem; color:#704; opacity:.85}
+    .error{color:#b00020; min-height:1.2em; font-size:.95rem; margin-top:.5rem}
+    .shake{animation: shake .35s linear}
+    @keyframes shake{ 10%, 90%{transform: translateX(-1px)} 20%, 80%{transform: translateX(2px)} 30%, 50%, 70%{transform: translateX(-4px)} 40%, 60%{transform: translateX(4px)} }
+
+    /* ---------- Screen: Landing ---------- */
+    #landing{
+      background:
+        linear-gradient(180deg, rgba(0,0,0,.45), rgba(0,0,0,.25)),
+        url("hands.jpg.jpg");
+      background-size: cover; background-position:center; color:#fff;
+    }
+    .subtext{ color:#fff; opacity:.95 }
+    .sunflower-btn{ --bg: var(--sunflower); --fg: #3b2b00; }
+
+    /* ---------- Screen: Letter (Open Letter style) ---------- */
+    #letter{
+  background:
+    linear-gradient(180deg, rgba(0,0,0,.42), rgba(0,0,0,.17)),
+    url("hands.jpg.jpg") center/cover no-repeat;
+  color: #fff;
+  /*display:none;*/
+}
+    .letter-wrap{
+  width:min(900px, 92%);
+  margin:auto;
+  background: rgba(255,255,255,0.96);
+  border-radius: 18px;
+  padding: clamp(18px, 4vw, 36px);
+  box-shadow: 0 30px 70px rgba(0,0,0,.22), inset 0 0 1px rgba(0,0,0,.3);
+  border: 1px solid rgba(0,0,0,.05);
+  position: relative;
+}
+
+    .letter-wrap:before, .letter-wrap:after{
+      content:""; position:absolute; width:120px; height:120px; background: url("letter.jpg.jpg") center/cover no-repeat; opacity:.15; filter: saturate(0.8);
+    }
+    .letter-wrap:before{ top:-30px; left:-30px; transform: rotate(-12deg); }
+    .letter-wrap:after{ bottom:-30px; right:-30px; transform: rotate(8deg); }
+    .letter-heading{ font-family: 'Great Vibes', cursive; font-size: clamp(34px, 5.5vw, 64px); color: var(--deep-red); text-align:center; margin:0 0 .75rem 0; }
+    .letter-body{ font-size: clamp(16px, 2.1vw, 20px); line-height: 1.9; color:#3a2d1a; white-space: pre-line; }
+    .signature{ margin-top:1.25rem; text-align:right; font-style:italic; color:#5b4430 }
+
+    /* ---------- Screen: Video ---------- */
+    #video{
+      background: linear-gradient(135deg, #1b1b1b, #2a0f0f);
+      color:#fff;
+    }
+    .video-wrap{ width:min(1080px, 96%); margin:auto; padding: 1rem; }
+    video{ width:100%; border-radius: 16px; box-shadow: 0 20px 60px rgba(0,0,0,.45); background:#000; }
+
+    /* Utility */
+    .hidden{display:none !important}
+    .note{font-size:.9rem; opacity:.8}
+    .top-left{ position:absolute; top:16px; left:16px; }
+    .top-right{ position:absolute; top:16px; right:16px; }
+    .small{ font-size:.9rem }
+  </style>
+</head>
+<body>
+  <!--
+    ✅ HOW TO USE / CUSTOMIZE
+    1) Put your music file at ./assets/song.mp3 (or change the src below).
+    2) Put your compiled video at ./assets/our-year.mp4 (H.264/MP4 recommended).
+    3) Replace the sunflower background images above if you want (Unsplash links used for now).
+    4) Replace the LETTER TEXT below inside #yourMessage with your real letter.
+    5) Deploy to Netlify or GitHub Pages. Everything is in a single file for simplicity.
+
+    PASSCODE is currently set to 270824. Change in JS if you want.
+  -->
+
+  <!-- Background audio -->
+  <audio id="bgMusic" src="O'Meri-Laila-Atif-Aslam-Jyotica-Tangri-320kbps.mp3" preload="auto" loop></audio>
+
+  <!-- Screen 1: Secret Code Gate -->
+  <section id="gate" class="screen active" aria-label="Secret code gate">
+    <div class="centered">
+      <div class="gate-card" id="gateCard">
+        <h3 style="text-align:center; font-size:1.6rem;">Enter our secret date to come in 💌</h3>
+        <p class="hint" style="text-align:center; margin-top:-.35rem;">(It’s the anniversary date only <span aria-hidden="true">😉</span>)</p>
+        <div class="input-row">
+          <input id="passcode" type="password" inputmode="numeric" placeholder="Enter code e.g., 270824" maxlength="6" aria-label="Enter secret code" />
+          <button class="btn" id="enterBtn" aria-label="Enter">Enter</button>
+        </div>
+        <div class="error" id="errorMsg" role="alert" aria-live="polite"></div>
+        <p class="note small" style="text-align:center; margin-top:.25rem;">For just us two. ♡</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 2: Landing -->
+  <section id="landing" class="screen" aria-label="Welcome">
+    <div class="centered">
+      <h1 class="title">Welcome to Nush & Shrey</h1>
+      <h2 class="subtitle">One year, countless memories, infinite love</h2>
+      <button class="btn sunflower-btn" id="toLetterBtn">Click it my love 🌻</button>
+    </div>
+    <div class="top-right">
+      <button class="btn small" id="musicToggle" aria-pressed="false">♫ Music: On/Off</button>
+    </div>
+  </section>
+
+  <!-- Screen 3: Open Letter -->
+  <section id="letter" class="screen" aria-label="Letter">
+    <div class="centered" style="align-items:stretch;">
+      <div class="letter-wrap">
+        <h3 class="letter-heading">A Letter To You</h3>
+        <div class="letter-body" id="yourMessage">My love,
+
+Happy first anniversary to us. From the little laughs to the big moments, this year with you has been my favorite story to live. Thank you for your patience, your warmth, and for choosing me—again and again.
+
+(Replace all of this with your real message. Write as much as you like. It will wrap beautifully like an open letter. You can add line breaks to space your thoughts, and it will still feel cozy and romantic.)
+
+Forever yours,
+Shrey</div>
+        <div class="signature">— with love, Shrey</div>
+      </div>
+      <div style="text-align:center; margin-top:0.5rem;">
+        <button class="btn btn-beam" id="toVideoBtn">Click it my Nush ✨</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Screen 4: Video Finale -->
+  <section id="video" class="screen" aria-label="Our Year Video">
+    <div class="centered" style="justify-content:flex-start; padding-top:5vh;">
+      <div class="video-wrap">
+        <h2 style="font-family:'Great Vibes', cursive; font-size: clamp(28px, 4.5vw, 60px); margin:.25rem 0 1rem; color:#ffe6e6; text-align:center;">Our Journey — Year One</h2>
+        <video id="yearVideo" controls preload="metadata" playsinline>
+          <source src="one_year.mp4" type="video/mp4">
+          Your browser does not support the video tag.
+        </video>
+        <div style="text-align:center; margin-top:1rem;">
+          <button class="btn" id="replayBtn">Replay the Magic</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <script>
+    const PASSCODE = '270824';
+
+    // Elements
+    const screens = {
+      gate: document.getElementById('gate'),
+      landing: document.getElementById('landing'),
+      letter: document.getElementById('letter'),
+      video: document.getElementById('video'),
+    };
+    const passcodeInput = document.getElementById('passcode');
+    const enterBtn = document.getElementById('enterBtn');
+    const errorMsg = document.getElementById('errorMsg');
+
+    const toLetterBtn = document.getElementById('toLetterBtn');
+    const toVideoBtn = document.getElementById('toVideoBtn');
+    const replayBtn = document.getElementById('replayBtn');
+
+    const bgMusic = document.getElementById('bgMusic');
+    const musicToggle = document.getElementById('musicToggle');
+    const yearVideo = document.getElementById('yearVideo');
+
+    // Helpers
+    function show(id){ Object.values(screens).forEach(s => s.classList.remove('active')); screens[id].classList.add('active'); }
+
+    function gentleFade(fromId, toId){
+      const from = screens[fromId];
+      const to = screens[toId];
+      from.style.opacity = 1; to.style.opacity = 0; to.classList.add('active');
+      const dur = 450;
+      const start = performance.now();
+      function step(ts){
+        const p = Math.min(1, (ts - start)/dur);
+        from.style.opacity = 1 - p; to.style.opacity = p;
+        if(p < 1) requestAnimationFrame(step); else { from.classList.remove('active'); from.style.opacity=''; to.style.opacity=''; }
+      }
+      requestAnimationFrame(step);
+    }
+
+    function startMusic(){
+      // try to play; browsers allow after user interaction
+      bgMusic.volume = 0.7;
+      bgMusic.play().catch(()=>{});
+      if(musicToggle){ musicToggle.setAttribute('aria-pressed','true'); musicToggle.textContent = '♫ Music: On'; }
+    }
+    function stopMusic(){ bgMusic.pause(); }
+
+    // Gate logic
+    function tryEnter(){
+      const code = (passcodeInput.value || '').trim();
+      if(code === PASSCODE){
+        errorMsg.textContent = '';
+        gentleFade('gate','landing');
+        startMusic();
+      } else {
+        errorMsg.textContent = 'Nope 😜 Only we know the magic date.';
+        const card = document.getElementById('gateCard');
+        card.classList.remove('shake'); void card.offsetWidth; card.classList.add('shake');
+        passcodeInput.focus();
+      }
+    }
+
+    enterBtn.addEventListener('click', tryEnter);
+    passcodeInput.addEventListener('keydown', (e)=>{ if(e.key==='Enter') tryEnter(); });
+
+    // Landing -> Letter
+    toLetterBtn.addEventListener('click', ()=>{
+      gentleFade('landing','letter');
+      // keep music playing here
+    });
+
+    // Letter -> Video
+    toVideoBtn.addEventListener('click', ()=>{
+      gentleFade('letter','video');
+      stopMusic();
+      yearVideo.currentTime = 0;
+      yearVideo.play().catch(()=>{});
+    });
+
+    // Music toggle
+    musicToggle.addEventListener('click', ()=>{
+      if(bgMusic.paused){ startMusic(); } else { stopMusic(); musicToggle.setAttribute('aria-pressed','false'); musicToggle.textContent = '♫ Music: Off'; }
+    });
+
+    // Replay flow
+    replayBtn.addEventListener('click', ()=>{
+      yearVideo.pause();
+      yearVideo.currentTime = 0;
+      gentleFade('video','landing');
+      startMusic();
+    });
+
+    // Optional: remember entry (session-based)
+    // if(sessionStorage.getItem('entered')==='yes'){ show('landing'); }
+    // else { show('gate'); }
+
+    // Accessibility niceties
+    document.addEventListener('visibilitychange', ()=>{
+      if(document.hidden){ bgMusic.pause(); } else {
+        if(screens.landing.classList.contains('active') || screens.letter.classList.contains('active')){
+          // resume softly
+          bgMusic.play().catch(()=>{});
+        }
+      }
+    });
+  </script>
+</body>
+</html>
