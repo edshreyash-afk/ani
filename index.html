@@ -163,6 +163,19 @@
     .top-left{ position:absolute; top:16px; left:16px; }
     .top-right{ position:absolute; top:16px; right:16px; }
     .small{ font-size:.9rem }
+
+    #letter .centered {
+  position: relative; /* Needed for absolute positioning the button */
+}
+
+.bottom-left-btn {
+  position: absolute;
+  bottom: 24px; /* Distance from bottom of .centered */
+  left: 24px;   /* Distance from left of .centered */
+}
+
+
+
   </style>
 </head>
 <body>
@@ -223,10 +236,10 @@ Forever yours,
 Shrey</div>
         <div class="signature">— with love, Shrey</div>
       </div>
-      <div style="text-align:center; margin-top:0.5rem;">
-        <button class="btn btn-beam" id="toVideoBtn">Click it my Nush ✨</button>
-      </div>
-    </div>
+      <div class="bottom-left-btn">
+  <button class="btn btn-beam" id="toVideoBtn">Click it my Nush ✨</button>
+</div>    
+ </div>
   </section>
 
   <!-- Screen 4: Video Finale -->
